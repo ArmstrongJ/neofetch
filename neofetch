@@ -769,7 +769,7 @@ get_wm() {
                            -e "westford" \
                            -e "weston")"
 
-    elif [[ "$DISPLAY" && "$os" != "Mac OS X" ]]; then
+    elif [[ "$DISPLAY" && "$os" != "Mac OS X" && "$os" != "FreeMiNT" ]]; then
         id="$(xprop -root -notype _NET_SUPPORTING_WM_CHECK)"
         id="${id##* }"
         wm="$(xprop -id "$id" -notype -len 100 -f _NET_WM_NAME 8t)"
@@ -815,6 +815,8 @@ get_wm() {
            	      wm="N.AES"
            	    elif [ -e /proc/geneva* ]; then
            	      wm="Geneva"
+           	    else
+           	      wm="Atari AES"
            	    fi
             ;;
             
