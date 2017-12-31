@@ -436,11 +436,11 @@ get_uptime() {
                     seconds="$((d*86400 + h*3600 + ${t%%:*}*60 + ${t#*:}))"
                 ;;
 
-					 "FreeMiNT")
-					     boot="$(sysctl -n kern.boottime)"
-					     now="$(date +%s)"
-					     seconds="$((now - boot))"
-					 ;;
+                "FreeMiNT")
+                    boot="$(sysctl -n kern.boottime)"
+                    now="$(date +%s)"
+                    seconds="$((now - boot))"
+                ;;
 
             esac
 
@@ -674,10 +674,10 @@ get_de() {
                 *) de="Aero" ;;
             esac
         ;;
-        
+
         "FreeMiNT")
             get_wm
-            
+
             if [ -e /proc/thing* ]; then
               de="Thing"
             elif [ -e /proc/jinnee* ]; then
@@ -694,7 +694,7 @@ get_de() {
            		de="Atari"
             fi
         ;;
-        
+
         *)
             ((wm_run != 1)) && get_wm
 
@@ -805,21 +805,21 @@ get_wm() {
                 [[ "$wm" == "blackbox" ]] && wm="bbLean (Blackbox)"
                 wm="${wm:+$wm, }Explorer"
             ;;
-            
+
             "FreeMiNT")
                 if [ -e /proc/xaaes* ]; then
-                  wm="XaAES"
+                    wm="XaAES"
                 elif [ -e /proc/myaes* ]; then
-                  wm="MyAES"
+                    wm="MyAES"
                 elif [ -e /proc/naes* ]; then
-           	      wm="N.AES"
-           	    elif [ -e /proc/geneva* ]; then
-           	      wm="Geneva"
-           	    else
-           	      wm="Atari AES"
-           	    fi
+                    wm="N.AES"
+                elif [ -e /proc/geneva* ]; then
+                    wm="Geneva"
+                else
+                    wm="Atari AES"
+                fi
             ;;
-            
+
         esac
     fi
 
@@ -1161,12 +1161,12 @@ get_cpu() {
             # Get CPU cores.
             cores="$(sysconf NPROC_ONLN)"
         ;;
-        
+
         "FreeMiNT")
             cpu="$(cat /kern/cpuinfo | awk -F':' '/CPU:/ {printf $2}')"
             speed="$(cat /kern/cpuinfo | awk -F':' '/Clocking:/ {printf $2}' | awk -F'.' '{ printf $1 }')"
         ;;
-        
+
     esac
 
     # Remove un-needed patterns from cpu output.
@@ -1509,7 +1509,7 @@ get_memory() {
             mem_free="$((mem_stat[5] / 1024))"
             mem_used="$((mem_total - mem_free))"
         ;;
-        
+
         "FreeMiNT")
             mem_total="$(cat /kern/meminfo | awk -F ':|kB' '/MemTotal:/ {printf $2}')"
             mem_free="$(cat /kern/meminfo | awk -F ':|kB' '/MemFree:/ {printf $2}')"
@@ -1517,7 +1517,7 @@ get_memory() {
             mem_total="$(( mem_total / 1024 ))"
             mem_used="$(( mem_used / 1024 ))"
         ;;
-            
+
     esac
     memory="${mem_used}${mem_label:-MiB} / ${mem_total}${mem_label:-MiB}"
 
@@ -1905,7 +1905,7 @@ get_term() {
         "Hyper") term="HyperTerm" ;;
         *) term="${TERM_PROGRAM/\.app}" ;;
     esac
-    
+
     # Most likely TosWin2 on FreeMiNT - quick check
     if [[ "$TERM" == "tw52" || "$TERM" == "tw100" ]]; then
         term="TosWin2"
@@ -2321,7 +2321,7 @@ get_local_ip() {
 get_public_ip() {
     if type -p dig >/dev/null; then
         public_ip="$(dig +time=1 +tries=1 +short myip.opendns.com @resolver1.opendns.com)"
-        [[ "$public_ip" =~ ^\; ]] && unset public_ip
+       [[ "$public_ip" =~ ^\; ]] && unset public_ip
     fi
 
     if [[ -z "$public_ip" ]] && type -p curl >/dev/null; then
@@ -2459,14 +2459,14 @@ get_cols() {
 
         printf "%b\n" "\\e[${text_padding}C${zws}${cols}"
     fi
-	 
+
     unset -v blocks blocks2 cols
 
-	 # TosWin2 on FreeMiNT is terrible at this,
-	 # so we'll reset colors arbitrarily
-	 if [ "${term}" == "TosWin2" ]; then
-	   printf "%b\n" "\\e[30;47m"
-	 fi
+    # TosWin2 on FreeMiNT is terrible at this,
+    # so we'll reset colors arbitrarily
+    if [ "${term}" == "TosWin2" ]; then
+        printf "%b\n" "\\e[30;47m"
+    fi
 
     # Tell info() that we printed manually.
     prin=1
